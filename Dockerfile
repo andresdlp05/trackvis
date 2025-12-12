@@ -51,4 +51,5 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8081/ || exit 1
 
 # Comando de inicio directo
-CMD ["python", "main.py"]
+CMD ["sh", "-c", "python scripts/download_data.py && python main.py"]
+#CMD ["python", "main.py"]
