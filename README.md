@@ -1,291 +1,229 @@
-# 👁️ TrackVis - Eye Tracking Visualization System
+# TrackVis - Eye Tracking Visualization System
 
-Sistema de visualización interactiva de datos de eye tracking con análisis de fijaciones, heatmaps y Radial Glyphs.
+Sistema de visualización interactiva de datos de eye tracking con análisis de fijaciones, heatmaps y Radial Glyphs basado en Flask.
 
-## 📋 Características
+## Características principales
 
-- ✅ Visualización de gaze points y fixations (algoritmo I-VT)
-- ✅ Heatmaps de atención por imagen
-- ✅ Scarf plots temporales
-- ✅ Brush interactivo para selección de áreas
-- ✅ Radial Glyph para análisis detallado
-- ✅ Análisis por participante
-- ✅ Proyecciones t-SNE
-- ✅ Saliency coverage analysis
-- ✅ Soporte para múltiples datasets (ADE20K, agrupados, disorder)
+- Visualización de datos de eye tracking (gaze points y fixations)
+- Heatmaps de atención visual
+- Radial Glyphs interactivos con brush selection
+- Análisis por participante con proyecciones t-SNE
+- Detección de fijaciones mediante algoritmo I-VT
+- Análisis de saliency coverage
+- Scarf plots y visualizaciones temporales
 
-## 🚀 Instalación
+## Requisitos previos
 
-### Requisitos previos
+### Para todos los sistemas operativos
 
-- Python 3.8 o superior
-- pip (incluido con Python)
-- Git
-- Git LFS (ejecuta `git lfs install` una vez para que los archivos grandes se descarguen correctamente)
+- **Docker Desktop** instalado y en ejecución
+  - [Descargar Docker para Windows](https://docs.docker.com/desktop/install/windows-install/)
+  - [Descargar Docker para Mac](https://docs.docker.com/desktop/install/mac-install/)
+  - [Descargar Docker para Linux](https://docs.docker.com/desktop/install/linux-install/)
+- **Git** instalado
+  - [Descargar Git](https://git-scm.com/downloads)
 
-### 1️⃣ Clonar el repositorio
+## Instalación con Docker
+
+### Windows
 
 ```bash
-git clone https://github.com/tuusuario/trackvis.git
+# 1. Clonar el repositorio
+git clone https://github.com/andresdlp05/trackvis.git
+
+# 2. Navegar al directorio del proyecto
 cd trackvis
-git lfs install
-git lfs pull
+
+# 3. Construir y levantar los contenedores
+docker-compose up -d --build
+
+# 4. (Opcional) Ver los logs en tiempo real
+docker-compose logs -f
 ```
 
-### 2️⃣ Instalar dependencias
-
-#### **En Windows:**
+### Linux
 
 ```bash
-# Crear entorno virtual
-python -m venv venv
+# 1. Clonar el repositorio
+git clone https://github.com/andresdlp05/trackvis.git
 
-# Activar entorno virtual
-venv\Scripts\activate
+# 2. Navegar al directorio del proyecto
+cd trackvis
 
-# Instalar dependencias
-pip install -r requirements.txt
+# 3. Construir y levantar los contenedores
+docker-compose up -d --build
+
+# 4. (Opcional) Ver los logs en tiempo real
+docker-compose logs -f
 ```
 
-#### **En Linux/Mac:**
+### Mac
 
 ```bash
-# Crear entorno virtual
-python3 -m venv venv
+# 1. Clonar el repositorio
+git clone https://github.com/andresdlp05/trackvis.git
 
-# Activar entorno virtual
-source venv/bin/activate
+# 2. Navegar al directorio del proyecto
+cd trackvis
 
-# Instalar dependencias
-pip install -r requirements.txt
+# 3. Construir y levantar los contenedores
+docker-compose up -d --build
+
+# 4. (Opcional) Ver los logs en tiempo real
+docker-compose logs -f
 ```
 
-### 3️⃣ Descargar datos (si no están incluidos)
+## Acceder a la aplicación
 
-Si los datos no están en el repositorio (debido a tamaño), descárgalos:
+Una vez que los contenedores estén en ejecución, abre tu navegador web y accede a:
+
+**http://localhost:8081**
+
+El sistema descargará automáticamente los datos necesarios la primera vez que se ejecute. Este proceso puede tardar varios minutos dependiendo de tu conexión a Internet.
+
+## Comandos útiles de Docker
+
+### Ver el estado de los contenedores
 
 ```bash
-# Opción 1: Desde Google Drive/Dropbox (proporciona el link)
-# Descargar y extraer en la carpeta static/data/
-
-# Opción 2: Usar script de descarga
-python scripts/download_data.py
+docker-compose ps
 ```
 
-**Archivos de datos necesarios:**
-- `static/data/df_final1.csv` (109 MB) - Datos principales de gaze tracking
-- `static/data/ivt_precalculated.csv` (2 MB) - Fijaciones precalculadas
-- `static/data/data_hololens.json` (221 KB) - Scores de participantes
-- `static/data/data_hololens_vectors.json` (4.6 MB) - Vectores de características
-- `static/data/upd_segmentations.csv` (3.7 MB) - Segmentaciones de imágenes
-- `static/data/precalculated_saliency_coverage.csv` (72 KB) - Cobertura de saliency
+### Detener la aplicación
 
-### 4️⃣ Ejecutar la aplicación
-
-#### **Opción 1: Script de inicio (recomendado)**
-
-**Windows:**
 ```bash
-run.bat
+docker-compose down
 ```
 
-**Linux/Mac:**
+### Detener y eliminar volúmenes (limpieza completa)
+
 ```bash
-chmod +x run.sh
-./run.sh
+docker-compose down -v
 ```
 
-#### **Opción 2: Comando directo**
+### Reiniciar la aplicación
 
-**Windows:**
 ```bash
-venv\Scripts\python.exe main2.py
+docker-compose restart
 ```
 
-**Linux/Mac:**
+### Ver logs de la aplicación
+
 ```bash
-source venv/bin/activate
-python main2.py
+# Ver todos los logs
+docker-compose logs
+
+# Ver logs en tiempo real
+docker-compose logs -f
+
+# Ver últimas 100 líneas
+docker-compose logs --tail=100
 ```
 
-### 5️⃣ Abrir en el navegador
+### Reconstruir la imagen desde cero
 
-Abre tu navegador en: **http://localhost:8081**
+```bash
+docker-compose build --no-cache
+docker-compose up -d
+```
 
-## 📁 Estructura del proyecto
+
+## Arquitectura del sistema
 
 ```
 trackvis/
-├── main2.py                    # Aplicación principal Flask
+├── main.py                     # Aplicación Flask principal
+├── docker-compose.yml          # Configuración de Docker
+├── Dockerfile                  # Imagen de Docker
 ├── requirements.txt            # Dependencias Python
-├── README.md                   # Este archivo
-├── run.sh / run.bat           # Scripts de inicio
 ├── app/
-│   ├── controllers/           # Controllers (blueprints)
-│   │   ├── glyph.py          # Radial Glyph
-│   │   ├── heatmap.py        # Heatmaps
-│   │   ├── scarf_plot.py     # Scarf plots
-│   │   └── by_participant.py # Análisis por participante
-│   ├── services/             # Servicios
+│   ├── controllers/            # Controllers (blueprints de Flask)
+│   │   ├── glyph.py           # Radial Glyph
+│   │   ├── heatmap.py         # Heatmaps
+│   │   ├── scarf_plot.py      # Scarf plots
+│   │   └── by_participant.py  # Análisis por participante
+│   ├── services/              # Servicios de negocio
 │   │   └── fixation_detection_ivt.py  # Detección de fijaciones I-VT
-│   └── shared/               # Servicios compartidos
-│       └── tsne_cache_service.py  # Cache de proyecciones t-SNE
+│   └── shared/                # Servicios compartidos
+│       └── tsne_cache_service.py      # Cache de proyecciones t-SNE
 ├── static/
-│   ├── main2.js              # JavaScript principal
-│   ├── glyph_brush2.js       # Glyph con brush D3
-│   ├── styles.css            # Estilos
-│   ├── data/                 # Datos CSV/JSON (NO incluir en Git)
-│   └── images/               # Imágenes del estudio
+│   ├── main.js                # JavaScript principal
+│   ├── glyph_brush.js         # Glyph con brush D3.js
+│   ├── styles.css             # Estilos CSS
+│   ├── data/                  # Datos CSV/JSON
+│   └── images/                # Imágenes del estudio
 └── templates/
-    └── index2.html           # Template principal
+    └── index.html             # Template HTML principal
 ```
 
-## 🎮 Uso
 
-### Vista por Imagen (View 1)
 
-1. Selecciona una imagen en el dropdown
-2. Elige tipo de datos: Gaze Points o Fixations
-3. Selecciona un participante (opcional)
-4. Arrastra un rectángulo sobre la imagen (brush)
-5. Visualiza el Radial Glyph con análisis del área
-
-### Vista por Participante (View 2)
-
-1. Cambia a la pestaña "By participant"
-2. Selecciona un participante
-3. Visualiza:
-   - Heatmap de atención en todas las imágenes
-   - Proyección t-SNE de imágenes
-   - Gráfico de saliency coverage
-
-### Overlays disponibles
-
-- **Points:** Muestra puntos de gaze o fixations
-- **Contour:** Contorno de fijaciones
-- **Heatmap:** Mapa de calor de atención
-
-## 🛠️ Configuración
-
-### Puerto
-
-Por defecto corre en puerto `8081`. Para cambiar:
-
-```python
-# En main2.py línea 592
-app.run(debug=True, port=8081)  # Cambiar 8081 por el puerto deseado
-```
-
-### Datos
-
-Para usar tus propios datos, asegúrate de que tengan el formato correcto:
-
-**df_final1.csv:**
-```csv
-participante,ImageName,ImageIndex,pixelX,pixelY,Time
-1,0,0,400,300,1234567.89
-```
-
-**ivt_precalculated.csv:**
-```csv
-participante,ImageName,ImageIndex,start,end,duration,x_centroid,y_centroid,pointCount
-1,0,0,1234567.89,1234568.12,0.23,400,300,15
-```
-
-## 🐛 Troubleshooting
-
-### Error: "No module named 'flask'"
+### El contenedor no inicia
 
 ```bash
-# Asegúrate de activar el entorno virtual
-source venv/bin/activate  # Linux/Mac
-venv\Scripts\activate     # Windows
+# Verificar que Docker Desktop esté corriendo
+docker --version
 
-# Reinstalar dependencias
-pip install -r requirements.txt
+# Ver logs de error
+docker-compose logs
+
+# Reconstruir desde cero
+docker-compose down -v
+docker-compose build --no-cache
+docker-compose up -d
 ```
 
-### Error: "Gaze data not loaded"
+### Error "port is already allocated"
+
+El puerto 8081 está ocupado por otra aplicación. Puedes cambiar el puerto editando `docker-compose.yml`:
+
+```yaml
+ports:
+  - "8082:8081"  # Cambia 8082 por el puerto que prefieras
+```
+
+### La descarga de datos falla
 
 ```bash
-# Verifica que los archivos CSV existen
-ls static/data/df_final1.csv
-ls static/data/ivt_precalculated.csv
+# Ver logs para identificar el error
+docker-compose logs -f
+
+# Reiniciar el contenedor
+docker-compose restart
+
+# Si el problema persiste, eliminar volúmenes y volver a crear
+docker-compose down -v
+docker-compose up -d --build
 ```
 
-### El brush no aparece
-
-- Verifica que D3.js se carga correctamente (abre consola del navegador F12)
-- Recarga la página con Ctrl+F5 (hard refresh)
-
-### Performance lento
+### La aplicación está lenta
 
 - Los datos se procesan en tiempo real
-- Para mejorar performance:
-  - Filtra por participante
+- Para mejor performance:
+  - Filtra por participante específico
   - Reduce el área del brush
   - Usa "Fixations" en lugar de "Gaze Points"
 
-### Error: "Descarga falla o zip inválido / unexpected EOF"
+### No puedo acceder a http://localhost:8081
+
 ```bash
-git lfs install
-git lfs pull
-```
-Si ves mensajes como “unexpected EOF” o los ZIP no se descomprimen, vuelve a clonar con Git LFS habilitado y repite el build.
+# Verificar que el contenedor esté corriendo
+docker-compose ps
 
-## 📊 Algoritmo I-VT
+# Verificar que el puerto esté mapeado correctamente
+docker-compose port trackvis 8081
 
-El sistema usa el algoritmo I-VT (Velocity-Threshold Identification) para detección de fijaciones:
-
-- **Velocity threshold:** 1.15 unidades
-- **Minimum duration:** 0.0 segundos
-- **Image dimensions:** 800x600 pixels
-
-## 🔧 Desarrollo
-
-### Estructura de rutas (main2.py)
-
-```python
-/                                          # Vista principal (index2.html)
-/api/heatmap/<image_id>                   # Heatmap data
-/api/scarf-plot/<image_id>                # Scarf plot data
-/api/analyze-area/<image_id>              # Análisis de área (brush)
-/api/participants/<image_id>              # Participantes por imagen
+# Verificar los logs del healthcheck
+docker-compose logs trackvis | grep health
 ```
 
-### Agregar nuevos features
+### Quiero limpiar todo y empezar de nuevo
 
-1. Crear controller en `app/controllers/`
-2. Registrar blueprint en `main2.py`
-3. Agregar ruta en el controller
-4. Actualizar `index2.html` y `main2.js`
+```bash
+# Detener y eliminar todo (contenedores, volúmenes, imágenes)
+docker-compose down -v
+docker system prune -a
 
-## 📝 Licencia
-
-[Tu licencia aquí - ej. MIT, GPL, etc.]
-
-## 👥 Contribuir
-
-Las contribuciones son bienvenidas. Por favor:
-
-1. Fork el proyecto
-2. Crea una rama (`git checkout -b feature/nueva-funcionalidad`)
-3. Commit tus cambios (`git commit -am 'Agregar nueva funcionalidad'`)
-4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
-5. Abre un Pull Request
-
-## 📧 Contacto
-
-[Tu email o información de contacto]
-
-## 🙏 Agradecimientos
-
-- Dataset: [Nombre del dataset]
-- Segmentación: ADE20K
-- Framework: Flask + D3.js
-- Algoritmo I-VT: [Referencia al paper]
-
----
-
-**Última actualización:** Diciembre 2024
-**Versión:** 2.0 (main2.py)
+# Volver a construir
+docker-compose up -d --build
+```
