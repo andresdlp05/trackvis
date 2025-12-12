@@ -6,6 +6,7 @@ Funciona en Windows, Linux y Mac
 import os
 import subprocess
 import sys
+import zipfile
 
 # Configuración de archivos a descargar
 FILES_TO_DOWNLOAD = [
@@ -66,13 +67,49 @@ def download_file(file_id, output_path):
         return False
 
 def extract_zip(zip_path, extract_to):
-    """Extrae un archivo ZIP"""
+    """Extrae un archivo ZIP, manejando posibles directorios raíz dentro del zip"""
     print(f"📦 Extrayendo {zip_path} a {extract_to}...")
     try:
-        import zipfile
         os.makedirs(extract_to, exist_ok=True)
+        
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-            zip_ref.extractall(extract_to)
+            
+            # Obtener todos los nombres de archivo
+            namelist = zip_ref.namelist()
+            
+            # Intentar identificar un directorio raíz único
+            root_dir = ""
+            if len(namelist) > 1 and namelist[0].endswith('/'):
+                # Si el primer elemento es un directorio, asumirlo como la raíz
+                root_dir = namelist[0]
+            
+            # Iterar y extraer, quitando el prefijo del directorio raíz si existe
+            for member in namelist:
+                target_path = member
+                
+                # Quitar el prefijo del directorio raíz
+                if member.startswith(root_dir) and root_dir:
+                    target_path = member[len(root_dir):]
+                
+                # Evitar procesar la entrada de directorio raíz en sí misma (si fue identificada)
+                if not target_path:
+                    continue
+                    
+                # Crear la ruta de destino final
+                f_target = os.path.join(extract_to, target_path)
+
+                # Asegurarse de que el directorio exista para la extracción
+                f_dir = os.path.dirname(f_target)
+                if f_dir:
+                    os.makedirs(f_dir, exist_ok=True)
+                
+                # Extraer solo si no es una entrada de directorio que ya manejamos
+                if not member.endswith('/'):
+                    source = zip_ref.open(member)
+                    target = open(f_target, "wb")
+                    with source, target:
+                        target.write(source.read())
+
         print(f"✅ Extracción completada: {extract_to}")
         # Eliminar el ZIP después de extraer
         os.remove(zip_path)

@@ -4,6 +4,7 @@
 
 ### 📋 Requisitos
 - Docker Desktop instalado ([Descargar aquí](https://www.docker.com/products/docker-desktop))
+- Git + Git LFS configurado (`git lfs install` y `git lfs pull` justo después de clonar)
 - Archivos de imágenes en Google Drive
 
 ---

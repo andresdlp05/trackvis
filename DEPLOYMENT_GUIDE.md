@@ -10,6 +10,7 @@ Esta guía te ayudará a preparar y desplegar TrackVis para que cualquier usuari
 - [x] .gitignore configurado correctamente
 - [x] requirements.txt con todas las dependencias
 - [x] Scripts de inicio (run.sh / run.bat)
+- [x] Git LFS configurado (`git lfs install` + `git lfs pull` antes de empaquetar)
 - [ ] Eliminar archivos innecesarios
 
 ### 2. **Gestión de datos (importante)**

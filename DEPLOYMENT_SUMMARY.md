@@ -61,6 +61,8 @@ Usuario descarga Docker Desktop según su sistema operativo.
 ```bash
 git clone https://github.com/tu-usuario/trackvis.git
 cd trackvis
+git lfs install
+git lfs pull
 ```
 
 ### Paso 3: Ejecutar Docker

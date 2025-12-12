@@ -21,12 +21,15 @@ Sistema de visualización interactiva de datos de eye tracking con análisis de 
 - Python 3.8 o superior
 - pip (incluido con Python)
 - Git
+- Git LFS (ejecuta `git lfs install` una vez para que los archivos grandes se descarguen correctamente)
 
 ### 1️⃣ Clonar el repositorio
 
 ```bash
 git clone https://github.com/tuusuario/trackvis.git
 cd trackvis
+git lfs install
+git lfs pull
 ```
 
 ### 2️⃣ Instalar dependencias
@@ -222,6 +225,13 @@ ls static/data/ivt_precalculated.csv
   - Filtra por participante
   - Reduce el área del brush
   - Usa "Fixations" en lugar de "Gaze Points"
+
+### Error: "Descarga falla o zip inválido / unexpected EOF"
+```bash
+git lfs install
+git lfs pull
+```
+Si ves mensajes como “unexpected EOF” o los ZIP no se descomprimen, vuelve a clonar con Git LFS habilitado y repite el build.
 
 ## 📊 Algoritmo I-VT
 

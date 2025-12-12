@@ -14,7 +14,10 @@ La forma más fácil de ejecutar TrackVis en **cualquier sistema operativo** (Wi
 ```bash
 git clone https://github.com/tu-usuario/trackvis.git
 cd trackvis
+git lfs install
+git lfs pull
 ```
+> ⚠️ Si omites Git LFS los ZIP grandes quedarán corruptos y la carpeta `static/data` no se descomprimirá.
 
 ### 3. Ejecutar con Docker
 ```bash
